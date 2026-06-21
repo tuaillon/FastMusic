@@ -92,6 +92,9 @@
     <Compile Include="PathManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoundedButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Theme.cs" />
     <EmbeddedResource Include="control\MenuBar.resx">
       <DependentUpon>MenuBar.cs</DependentUpon>

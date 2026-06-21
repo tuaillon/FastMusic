@@ -116,7 +116,12 @@ namespace FastMusic
         public static void ApplyTheme(Form form)
         {
             form.BackColor = CurrentTheme.BackGroundColor;
-            foreach (Control control in form.Controls)
+            ApplyThemeToControls(form.Controls);
+        }
+
+        private static void ApplyThemeToControls(Control.ControlCollection controls)
+        {
+            foreach (Control control in controls)
             {
                 if (control is Button button)
                 {
@@ -126,6 +131,11 @@ namespace FastMusic
                 else if (control is Label label)
                 {
                     label.ForeColor = CurrentTheme.TextColor;
+                }
+
+                if (control.HasChildren)
+                {
+                    ApplyThemeToControls(control.Controls);
                 }
             }
         }
