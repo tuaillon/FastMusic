@@ -10,9 +10,9 @@ namespace FastMusic
     internal class ThemeJson
     {
         public string Name { get; set; }
-        public int BackGroundColor { get; set; }
-        public int ButtonsColor { get; set; }
-        public int TextColor { get; set; }
+        public string BackGroundColor { get; set; }
+        public string ButtonsColor { get; set; }
+        public string TextColor { get; set; }
     }
 
     internal struct Theme
@@ -27,9 +27,9 @@ namespace FastMusic
             string path = Path.Combine(PathManager.GetDefaultThemePath, name + ".json");
             ThemeJson temp = JsonSerializer.Deserialize<ThemeJson>(File.ReadAllText(path));
             this.Name = temp.Name;
-            this.BackGroundColor = Color.FromArgb(temp.BackGroundColor);
-            this.ButtonsColor = Color.FromArgb(temp.ButtonsColor);
-            this.TextColor = Color.FromArgb(temp.TextColor);
+            this.BackGroundColor = ColorTranslator.FromHtml(temp.BackGroundColor);
+            this.ButtonsColor = ColorTranslator.FromHtml(temp.ButtonsColor);
+            this.TextColor = ColorTranslator.FromHtml(temp.TextColor);
         }
 
         public static Theme FromFile(string filePath)
@@ -38,9 +38,9 @@ namespace FastMusic
             return new Theme
             {
                 Name = temp.Name,
-                BackGroundColor = Color.FromArgb(temp.BackGroundColor),
-                ButtonsColor = Color.FromArgb(temp.ButtonsColor),
-                TextColor = Color.FromArgb(temp.TextColor)
+                BackGroundColor = ColorTranslator.FromHtml(temp.BackGroundColor),
+                ButtonsColor = ColorTranslator.FromHtml(temp.ButtonsColor),
+                TextColor = ColorTranslator.FromHtml(temp.TextColor)
             };
         }
         public static Theme Default => new Theme
@@ -105,7 +105,7 @@ namespace FastMusic
                     }
                     catch (Exception ex)
                     {
-                        System.Diagnostics.Debug.WriteLine($"Erreur lors du chargement du thème '{file}': {ex.Message}");
+                        MessageBox.Show("Could not load theme : " + ex);
                     }
                 }
             }

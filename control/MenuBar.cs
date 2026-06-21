@@ -63,6 +63,21 @@ namespace FastMusic.control
             parent.Close();
         }
 
+        private void hoverEnter(object sender, EventArgs e)
+        {
+            PictureBox pic = sender as PictureBox;
+            this.Cursor = Cursors.Hand;
+            pic.Size = new Size(pic.Size.Width + 2, pic.Size.Height + 2);
+        }
+
+        private void hoverLeave(object sender, EventArgs e)
+        {
+            PictureBox pic = sender as PictureBox;
+            this.Cursor = Cursors.Default;
+            pic.Size = new Size(pic.Size.Width - 2, pic.Size.Height - 2);
+
+        }
+
 
     }
 }

@@ -6,26 +6,107 @@ using System.Windows.Forms;
 public class RoundedButton : Button
 {
     public int CornerRadius { get; set; } = 20;
+    public bool IsCircle { get; set; } = false;
+
+    private bool isHovered = false;
+    private bool isPressed = false;
+
+    public RoundedButton()
+    {
+        this.DoubleBuffered = true;
+    }
+
+    protected override void OnMouseEnter(EventArgs e)
+    {
+        base.OnMouseEnter(e);
+        isHovered = true;
+        this.Invalidate();
+    }
+
+    protected override void OnMouseLeave(EventArgs e)
+    {
+        base.OnMouseLeave(e);
+        isHovered = false;
+        this.Invalidate();
+    }
+
+    protected override void OnMouseDown(MouseEventArgs mevent)
+    {
+        base.OnMouseDown(mevent);
+        isPressed = true;
+        this.Invalidate();
+    }
+
+    protected override void OnMouseUp(MouseEventArgs mevent)
+    {
+        base.OnMouseUp(mevent);
+        isPressed = false;
+        this.Invalidate();
+    }
 
     protected override void OnPaint(PaintEventArgs pe)
     {
         pe.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+        pe.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+        pe.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+        // Clear square corners using parent back color, avoiding region clipping jaggedness
+        if (this.Parent != null)
+        {
+            using (SolidBrush parentBrush = new SolidBrush(this.Parent.BackColor))
+            {
+                pe.Graphics.FillRectangle(parentBrush, ClientRectangle);
+            }
+        }
+
+        this.Region = null;
 
         GraphicsPath path = new GraphicsPath();
         Rectangle rect = ClientRectangle;
 
-        rect.Width -= 1;
-        rect.Height -= 1;
+        // Inset by 1.5 pixels to keep anti-aliasing fully inside control boundaries
+        rect.X += 1;
+        rect.Y += 1;
+        rect.Width -= 3;
+        rect.Height -= 3;
 
-        path.AddArc(rect.X, rect.Y, CornerRadius, CornerRadius, 180, 90);
-        path.AddArc(rect.Right - CornerRadius, rect.Y, CornerRadius, CornerRadius, 270, 90);
-        path.AddArc(rect.Right - CornerRadius, rect.Bottom - CornerRadius, CornerRadius, CornerRadius, 0, 90);
-        path.AddArc(rect.X, rect.Bottom - CornerRadius, CornerRadius, CornerRadius, 90, 90);
-        path.CloseAllFigures();
+        if (IsCircle)
+        {
+            path.AddEllipse(rect);
+        }
+        else
+        {
+            int diameter = CornerRadius;
+            if (diameter > rect.Width) diameter = rect.Width;
+            if (diameter > rect.Height) diameter = rect.Height;
+            if (diameter <= 0) diameter = 1;
 
-        this.Region = new Region(path);
+            path.AddArc(rect.X, rect.Y, diameter, diameter, 180, 90);
+            path.AddArc(rect.Right - diameter, rect.Y, diameter, diameter, 270, 90);
+            path.AddArc(rect.Right - diameter, rect.Bottom - diameter, diameter, diameter, 0, 90);
+            path.AddArc(rect.X, rect.Bottom - diameter, diameter, diameter, 90, 90);
+            path.CloseAllFigures();
+        }
 
-        using (SolidBrush brush = new SolidBrush(this.BackColor))
+        Color backColor = this.BackColor;
+        if (isPressed)
+        {
+            backColor = Color.FromArgb(
+                Math.Max(0, this.BackColor.R - 20),
+                Math.Max(0, this.BackColor.G - 20),
+                Math.Max(0, this.BackColor.B - 20)
+            );
+        }
+        else if (isHovered)
+        {
+            backColor = Color.FromArgb(
+                Math.Min(255, this.BackColor.R + 25),
+                Math.Min(255, this.BackColor.G + 25),
+                Math.Min(255, this.BackColor.B + 25)
+            );
+        }
+
+        using (SolidBrush brush = new SolidBrush(backColor))
         {
             pe.Graphics.FillPath(brush, path);
         }
@@ -80,7 +161,19 @@ public class RoundedButton : Button
             pe.Graphics.DrawImage(this.Image, imgRect);
         }
 
-        using (Pen pen = new Pen(this.ForeColor, 1))
+        Color penColor = this.ForeColor;
+        int penWidth = 1;
+        if (isHovered)
+        {
+            penWidth = 2;
+            penColor = Color.FromArgb(
+                Math.Min(255, this.ForeColor.R + 30),
+                Math.Min(255, this.ForeColor.G + 30),
+                Math.Min(255, this.ForeColor.B + 30)
+            );
+        }
+
+        using (Pen pen = new Pen(penColor, penWidth))
         {
             pe.Graphics.DrawPath(pen, path);
         }

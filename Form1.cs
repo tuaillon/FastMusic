@@ -10,8 +10,16 @@ using System.Windows.Forms;
 
 namespace FastMusic
 {
+    public enum SongState
+    {
+        PLAYING,
+        PAUSED,
+    }
+
+
     public partial class Form1 : Form
     {
+        SongState m_state = SongState.PAUSED;
         public Form1()
         {
             InitializeComponent();
@@ -23,16 +31,28 @@ namespace FastMusic
         {
             base.OnLoad(e);
 
-            // Configure layout behaviors at runtime only (does not affect visual designer)
             if (pnlCurrent != null)
             {
                 pnlCurrent.Dock = DockStyle.Bottom;
-                pnlCurrent.Height = 120;
             }
 
-            // Adjust form size to screen working area
-            int targetWidth = Math.Min(1920, Screen.PrimaryScreen.WorkingArea.Width);
-            int targetHeight = Math.Min(1000, Screen.PrimaryScreen.WorkingArea.Height);
+            if (btnPlay != null && btnSkipPrevious != null && btnSkipNext != null)
+            {
+                btnPlay.Size = new Size(65, 65);
+                btnPlay.IsCircle = true;
+
+                btnSkipPrevious.Size = new Size(65, 65);
+                btnSkipPrevious.IsCircle = true;
+
+                btnSkipNext.Size = new Size(65, 65);
+                btnSkipNext.IsCircle = true;
+            }
+
+            int designerWidth = this.Width;
+            int designerHeight = this.Height;
+
+            int targetWidth = Math.Min(designerWidth, Screen.PrimaryScreen.WorkingArea.Width);
+            int targetHeight = Math.Min(designerHeight, Screen.PrimaryScreen.WorkingArea.Height);
             this.Size = new Size(targetWidth, targetHeight);
 
             // Center form
@@ -40,6 +60,13 @@ namespace FastMusic
                 (Screen.PrimaryScreen.WorkingArea.Width - this.Width) / 2,
                 (Screen.PrimaryScreen.WorkingArea.Height - this.Height) / 2
             );
+
+            // Bind hover events to buttons at runtime
+            foreach (RoundedButton rdb in this.Controls.OfType<RoundedButton>())
+            {
+                rdb.MouseEnter += hoverEnter;
+                rdb.MouseLeave += hoverLeave;
+            }
         }
 
         protected override void OnResize(EventArgs e)
@@ -50,21 +77,26 @@ namespace FastMusic
 
             if (btnPlay != null && btnSkipPrevious != null && btnSkipNext != null && pnlCurrent != null)
             {
-                int buttonsY = this.ClientSize.Height - pnlCurrent.Height - btnPlay.Height - 20;
+                int buttonsY = this.ClientSize.Height - pnlCurrent.Height - btnPlay.Height - 10;
                 btnPlay.Location = new Point(centerX - btnPlay.Width / 2, buttonsY);
                 btnSkipPrevious.Location = new Point(btnPlay.Left - btnSkipPrevious.Width - 34, buttonsY);
                 btnSkipNext.Location = new Point(btnPlay.Right + 34, buttonsY);
 
+                if (pnlCateg != null)
+                {
+                    int heightCateg = buttonsY - pnlCateg.Top - 10;
+                    if (heightCateg < 100) heightCateg = 100;
+                    pnlCateg.Size = new Size(pnlCateg.Width, heightCateg);
+                }
+
                 if (pnlSongs != null)
                 {
-                    int leftSongs = (this.ClientSize.Width - 1207) / 2;
-                    if (leftSongs < 0) leftSongs = 0;
+                    int widthSongs = this.ClientSize.Width - pnlSongs.Left - 13;
+                    if (widthSongs < 100) widthSongs = 100;
 
-                    int widthSongs = Math.Min(1207, this.ClientSize.Width);
-                    int heightSongs = buttonsY - 73 - 15;
+                    int heightSongs = buttonsY - pnlSongs.Top - 10;
                     if (heightSongs < 100) heightSongs = 100;
 
-                    pnlSongs.Location = new Point(leftSongs, 73);
                     pnlSongs.Size = new Size(widthSongs, heightSongs);
                 }
             }
@@ -76,9 +108,34 @@ namespace FastMusic
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
 
+        private void hoverEnter(object sender, EventArgs e)
+        {
+            RoundedButton pic = sender as RoundedButton;
+            this.Cursor = Cursors.Hand;
+            pic.Size = new Size(pic.Size.Width + 2, pic.Size.Height + 2);
+        }
+
+        private void hoverLeave(object sender, EventArgs e)
+        {
+            RoundedButton pic = sender as RoundedButton;
+            this.Cursor = Cursors.Default;
+            pic.Size = new Size(pic.Size.Width - 2, pic.Size.Height - 2);
+
+        }
+
+        private void btnPlay_Click(object sender, EventArgs e)
+        {
+            if (m_state == SongState.PAUSED )
+            {
+                m_state = SongState.PLAYING;
+                btnPlay.BackgroundImage = Properties.Resources.pause;
+            }
+            else
+            {
+                m_state = SongState.PAUSED;
+                btnPlay.BackgroundImage = Properties.Resources.play;
+            }
         }
     }
 }

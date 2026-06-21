@@ -28,23 +28,11 @@ namespace FastMusic.control
         /// </summary>
         private void InitializeComponent()
         {
-            this.picCroix = new System.Windows.Forms.PictureBox();
             this.picMoins = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.picCroix)).BeginInit();
+            this.picCroix = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.picMoins)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picCroix)).BeginInit();
             this.SuspendLayout();
-            // 
-            // picCroix
-            // 
-            this.picCroix.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.picCroix.Image = global::FastMusic.Properties.Resources.croix;
-            this.picCroix.Location = new System.Drawing.Point(1572, 14);
-            this.picCroix.Name = "picCroix";
-            this.picCroix.Size = new System.Drawing.Size(100, 50);
-            this.picCroix.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picCroix.TabIndex = 0;
-            this.picCroix.TabStop = false;
-            this.picCroix.Click += new System.EventHandler(this.picCroix_Click);
             // 
             // picMoins
             // 
@@ -57,6 +45,22 @@ namespace FastMusic.control
             this.picMoins.TabIndex = 1;
             this.picMoins.TabStop = false;
             this.picMoins.Click += new System.EventHandler(this.picMoins_Click);
+            this.picMoins.MouseEnter += new System.EventHandler(this.hoverEnter);
+            this.picMoins.MouseLeave += new System.EventHandler(this.hoverLeave);
+            // 
+            // picCroix
+            // 
+            this.picCroix.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.picCroix.Image = global::FastMusic.Properties.Resources.croix;
+            this.picCroix.Location = new System.Drawing.Point(1572, 14);
+            this.picCroix.Name = "picCroix";
+            this.picCroix.Size = new System.Drawing.Size(100, 50);
+            this.picCroix.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picCroix.TabIndex = 0;
+            this.picCroix.TabStop = false;
+            this.picCroix.Click += new System.EventHandler(this.picCroix_Click);
+            this.picCroix.MouseEnter += new System.EventHandler(this.hoverEnter);
+            this.picCroix.MouseLeave += new System.EventHandler(this.hoverLeave);
             // 
             // MenuBar
             // 
@@ -67,8 +71,8 @@ namespace FastMusic.control
             this.Name = "MenuBar";
             this.Size = new System.Drawing.Size(1687, 67);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MenuBar_MouseDown);
-            ((System.ComponentModel.ISupportInitialize)(this.picCroix)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMoins)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picCroix)).EndInit();
             this.ResumeLayout(false);
 
         }
