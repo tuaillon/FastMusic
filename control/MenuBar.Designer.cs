@@ -38,7 +38,7 @@ namespace FastMusic.control
             // 
             this.picMoins.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.picMoins.Image = global::FastMusic.Properties.Resources.moins;
-            this.picMoins.Location = new System.Drawing.Point(1466, 14);
+            this.picMoins.Location = new System.Drawing.Point(1485, 14);
             this.picMoins.Name = "picMoins";
             this.picMoins.Size = new System.Drawing.Size(100, 50);
             this.picMoins.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;

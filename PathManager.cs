@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FastMusic
 {
@@ -19,26 +15,21 @@ namespace FastMusic
             get => Path.Combine(GetDefaultPath, "themes");
         }
 
-        public static void CreateDefaultIfNotExists() 
+        public static void CreateDefaultIfNotExists()
         {
             string dir = Path.Combine(getDesktopPath(), "fastMusic");
 
-            if (!Directory.Exists(dir))
+            if ( !Directory.Exists(dir) )
                 Directory.CreateDirectory(dir);
 
             string themeDir = Path.Combine(dir, "themes");
-            
-            if (!Directory.Exists(themeDir))
+
+            if ( !Directory.Exists(themeDir) )
                 Directory.CreateDirectory(themeDir);
-
-            string playlistDir = Path.Combine(dir, "playlists");
-
-            if ( !Directory.Exists(playlistDir))
-                Directory.CreateDirectory(playlistDir);
 
             string songsDir = Path.Combine(dir, "songs");
 
-            if (!Directory.Exists(songsDir))
+            if ( !Directory.Exists(songsDir) )
                 Directory.CreateDirectory(songsDir);
         }
 

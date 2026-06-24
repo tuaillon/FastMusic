@@ -3,6 +3,9 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
+namespace FastMusic
+{
+
 public class RoundedButton : Button
 {
     public int CornerRadius { get; set; } = 20;
@@ -211,3 +214,5 @@ public class RoundedButton : Button
         return new Rectangle(x, y, img.Width, img.Height);
     }
 }
+
+} // namespace FastMusic

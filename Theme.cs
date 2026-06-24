@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Text.Json;
@@ -43,6 +44,8 @@ namespace FastMusic
                 TextColor = ColorTranslator.FromHtml(temp.TextColor)
             };
         }
+        public override string ToString() => Name ?? "Default";
+
         public static Theme Default => new Theme
         {
             Name = "Default",
@@ -61,7 +64,9 @@ namespace FastMusic
         {
             get
             {
-                if (m_availablesThemes == null)
+                if ( LicenseManager.UsageMode == LicenseUsageMode.Designtime )
+                    return new List<Theme>();
+                if ( m_availablesThemes == null )
                     m_availablesThemes = LoadThemes();
                 return m_availablesThemes;
             }
@@ -71,7 +76,7 @@ namespace FastMusic
         {
             get
             {
-                if (m_currentTheme == null)
+                if ( m_currentTheme == null )
                 {
                     m_currentTheme = AvailablesThemes.Count > 0
                         ? AvailablesThemes[0]
@@ -92,18 +97,18 @@ namespace FastMusic
             string dir = PathManager.GetDefaultThemePath;
             List<Theme> res = new List<Theme>();
 
-            if (!Directory.Exists(dir))
+            if ( !Directory.Exists(dir) )
                 return res;
 
-            foreach (string file in Directory.GetFiles(dir))
+            foreach ( string file in Directory.GetFiles(dir) )
             {
-                if (Path.GetExtension(file).Equals(".json", StringComparison.OrdinalIgnoreCase))
+                if ( Path.GetExtension(file).Equals(".json", StringComparison.OrdinalIgnoreCase) )
                 {
                     try
                     {
                         res.Add(Theme.FromFile(file));
                     }
-                    catch (Exception ex)
+                    catch ( Exception ex )
                     {
                         MessageBox.Show("Could not load theme : " + ex);
                     }
@@ -121,19 +126,19 @@ namespace FastMusic
 
         private static void ApplyThemeToControls(Control.ControlCollection controls)
         {
-            foreach (Control control in controls)
+            foreach ( Control control in controls )
             {
-                if (control is Button button)
+                if ( control is Button button )
                 {
                     button.BackColor = CurrentTheme.ButtonsColor;
                     button.ForeColor = CurrentTheme.TextColor;
                 }
-                else if (control is Label label)
+                else if ( control is Label label )
                 {
                     label.ForeColor = CurrentTheme.TextColor;
                 }
 
-                if (control.HasChildren)
+                if ( control.HasChildren )
                 {
                     ApplyThemeToControls(control.Controls);
                 }
