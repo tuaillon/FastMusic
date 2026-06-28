@@ -49,7 +49,7 @@ namespace FastMusic
         public static Theme Default => new Theme
         {
             Name = "Default",
-            BackGroundColor = Color.FromArgb(255, 30, 30, 30),
+            BackGroundColor = Color.FromArgb(255, 30, 30, 30), 
             ButtonsColor = Color.FromArgb(255, 60, 60, 60),
             TextColor = Color.White
         };

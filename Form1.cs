@@ -23,6 +23,7 @@ namespace FastMusic
             if ( LicenseManager.UsageMode != LicenseUsageMode.Designtime )
             {
                 PathManager.CreateDefaultIfNotExists();
+                DataHandler.CreateDefaultDataFileIfNotExists();
                 ThemeManager.ApplyTheme(this);
             }
 
